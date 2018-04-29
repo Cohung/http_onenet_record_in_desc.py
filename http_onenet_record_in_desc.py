@@ -25,6 +25,8 @@ while True:
 		reply_sms="" #作用：存储每次查询短信提示的初始返回数据。新的扫描开始前需要清空。
 		rec_id=[] #作用：用来记录所有传感器ID用于后续删除。新的扫描开始前需要清空。
 		sms_id=[] #作用：用来记录所有传感器ID用于后续删除。新的扫描开始前需要清空。
+		num=0;
+		sms_num=0;
 		request_num=request_num+1
 		print "这是第"+str(request_num)+"次查询！"
 
@@ -164,6 +166,20 @@ while True:
 						print  'Send Failed'
 						sys.exit()
 				print "删除第"+str(x+1)+"条记录!"
+				time.sleep(0.05) #休息50ms
+		print "这次查到了"+str(sms_num)+"条短信,下面开始逐个删除。"		
+		for x in range(0,sms_num):
+				
+				try:
+						#Set the whole string
+						s.sendall(message_del_1.encode("UTF-8")+sms_id[x].encode("UTF-8")+message_del_2.encode("UTF-8"))
+						#print(message_del_1.encode("UTF-8")+rec_id[x].encode("UTF-8")+message_del_2.encode("UTF-8"))
+						#time.sleep(2)
+				except socket.error:
+						#Send Failed
+						print  'Send Failed'
+						sys.exit()
+				print "删除第"+str(x+1)+"条短信!"
 				time.sleep(0.05) #休息50ms
 		s.close() #可以在连接状态下，间歇地发送多条数据删除指令，最后再关闭。
 		
