@@ -1,35 +1,40 @@
-# -*- coding: utf-8 -*
-#!C:\Program Files (x86)\Python27
+ï»¿#! python2
+#coding=utf-8
 
 
 import codecs
 import socket #for sockets
 import sys #for exit
 import os
-import time #Êı×Öµ¥Î»ÎªÃë
+import time #æ•°å­—å•ä½ä¸ºç§’
 import json
 
 from yunpian_python_sdk.model import constant as YC
 from yunpian_python_sdk.ypclient import YunpianClient
-# ³õÊ¼»¯client,apikey×÷ÎªËùÓĞÇëÇóµÄÄ¬ÈÏÖµ
+# åˆå§‹åŒ–client,apikeyä½œä¸ºæ‰€æœ‰è¯·æ±‚çš„é»˜è®¤å€¼
 clnt = YunpianClient('f112f4be2850c7951cb8bda154c437d5')
+param = {YC.MOBILE:'13026632336',YC.TEXT:'ã€æ˜“è”ç‰©è”ç§‘æŠ€ã€‘æœºå™¨ç¼–å·ï¼š083780741,è´§é“2ç¼ºè´§ï¼Œè¯·åŠæ—¶è¡¥å……'}
 
 host = 'api.heclouds.com'
 port = 80
 
-request_num=0 #È«¾Ö±äÁ¿£¬ÓÃÓÚ¼ÇÂ¼É¨Ãè´ÎÊı¡£²»²ÎÓë¾ßÌåÊÂÎñ
+request_num=0 #å…¨å±€å˜é‡ï¼Œç”¨äºè®°å½•æ‰«ææ¬¡æ•°ã€‚ä¸å‚ä¸å…·ä½“äº‹åŠ¡
 
 
 while True:
-		reply="" #×÷ÓÃ£º´æ´¢Ã¿´Î²éÑ¯¼ÇÂ¼µÄ³õÊ¼·µ»ØÊı¾İ¡£ĞÂµÄÉ¨Ãè¿ªÊ¼Ç°ĞèÒªÇå¿Õ¡£
-		reply_sms="" #×÷ÓÃ£º´æ´¢Ã¿´Î²éÑ¯¶ÌĞÅÌáÊ¾µÄ³õÊ¼·µ»ØÊı¾İ¡£ĞÂµÄÉ¨Ãè¿ªÊ¼Ç°ĞèÒªÇå¿Õ¡£
-		rec_id=[] #×÷ÓÃ£ºÓÃÀ´¼ÇÂ¼ËùÓĞ´«¸ĞÆ÷IDÓÃÓÚºóĞøÉ¾³ı¡£ĞÂµÄÉ¨Ãè¿ªÊ¼Ç°ĞèÒªÇå¿Õ¡£
-		sms_id=[] #×÷ÓÃ£ºÓÃÀ´¼ÇÂ¼ËùÓĞ´«¸ĞÆ÷IDÓÃÓÚºóĞøÉ¾³ı¡£ĞÂµÄÉ¨Ãè¿ªÊ¼Ç°ĞèÒªÇå¿Õ¡£
+		reply="" #ä½œç”¨ï¼šå­˜å‚¨æ¯æ¬¡æŸ¥è¯¢è®°å½•çš„åˆå§‹è¿”å›æ•°æ®ã€‚æ–°çš„æ‰«æå¼€å§‹å‰éœ€è¦æ¸…ç©ºã€‚
+		reply_sms="" #ä½œç”¨ï¼šå­˜å‚¨æ¯æ¬¡æŸ¥è¯¢çŸ­ä¿¡æç¤ºçš„åˆå§‹è¿”å›æ•°æ®ã€‚æ–°çš„æ‰«æå¼€å§‹å‰éœ€è¦æ¸…ç©ºã€‚
+		rec_id=[] #ä½œç”¨ï¼šç”¨æ¥è®°å½•æ‰€æœ‰ä¼ æ„Ÿå™¨IDç”¨äºåç»­åˆ é™¤ã€‚æ–°çš„æ‰«æå¼€å§‹å‰éœ€è¦æ¸…ç©ºã€‚
+		sms_id=[] #ä½œç”¨ï¼šç”¨æ¥è®°å½•æ‰€æœ‰ä¼ æ„Ÿå™¨IDç”¨äºåç»­åˆ é™¤ã€‚æ–°çš„æ‰«æå¼€å§‹å‰éœ€è¦æ¸…ç©ºã€‚
 		num=0;
 		sms_num=0;
 		request_num=request_num+1
-		print "ÕâÊÇµÚ"+str(request_num)+"´Î²éÑ¯£¡"
-
+		print u"è¿™æ˜¯ç¬¬"+str(request_num).encode('utf-8')+u"æ¬¡æŸ¥è¯¢ï¼"
+		#çŸ¥ä¹ï¼šprint (unicode("è¯·è¾“å…¥é”€å”®é¢", encoding="utf-8")) å°†utf-8ç¼–ç è½¬æ¢ä¸ºunicodeå°±å¯ä»¥è¾“å‡ºä¸­æ–‡äº†ã€‚
+		__file__ = open(r'log.txt', 'a')
+		print >>__file__, "è¿™æ˜¯ç¬¬"+str(request_num)+"æ¬¡æŸ¥è¯¢ï¼"
+		__file__.close()
+		
 		try:
 			#create an AF_INET, STREAM socket(TCP)
 			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,12 +58,12 @@ while True:
 
 		#print ('Socket Connected to '+host+' on IP '+remote_ip)
 		#handling errors in python socket programs
-		###################ÒÔÏÂÏÈ¶ÁÈ¡ÁìÓÃ¼ÇÂ¼ĞÅÏ¢
+		###################ä»¥ä¸‹å…ˆè¯»å–é¢†ç”¨è®°å½•ä¿¡æ¯
 		message = "GET /devices?key_words=mydevice HTTP/1.1\r\nHost:api.heclouds.com\r\nAccept:*/*\r\napi-key:X6gNMI=4KPqDDLuHNLR40rS=9nY=\r\nContent-Length:0\r\n\r\n"
 		try:
 			#Set the whole string
 			s.sendall(message.encode("UTF-8"))
-			print(message.encode("UTF-8"))
+			#print(message.encode("UTF-8"))
 		except socket.error:
 			#Send Failed
 			print 'Send Failed'
@@ -72,14 +77,14 @@ while True:
 			# recv_data=s.recv(8192)
 			# if not recv_data: break
 			# reply+=recv_data
-		reply = s.recv(8192) #8192Õâ¸ö»º³åÇøµÄ´óĞ¡Ö±½ÓÓ°Ïìµ½½ÓÊÕÊı¾İµÄÍêÕû³Ì¶È
+		reply = s.recv(8192) #8192è¿™ä¸ªç¼“å†²åŒºçš„å¤§å°ç›´æ¥å½±å“åˆ°æ¥æ”¶æ•°æ®çš„å®Œæ•´ç¨‹åº¦
 		#print "out recv"
-		###################ÒÔÏÂÔÙ¶ÁÈ¡¶ÌĞÅ¼ÇÂ¼ĞÅÏ¢
+		###################ä»¥ä¸‹å†è¯»å–çŸ­ä¿¡è®°å½•ä¿¡æ¯
 		message = "GET /devices?key_words=mysmsrec HTTP/1.1\r\nHost:api.heclouds.com\r\nAccept:*/*\r\napi-key:X6gNMI=4KPqDDLuHNLR40rS=9nY=\r\nContent-Length:0\r\n\r\n"
 		try:
 			#Set the whole string
 			s.sendall(message.encode("UTF-8"))
-			print(message.encode("UTF-8"))
+			#print(message.encode("UTF-8"))
 		except socket.error:
 			#Send Failed
 			print 'Send Failed'
@@ -93,57 +98,86 @@ while True:
 			# recv_data=s.recv(8192)
 			# if not recv_data: break
 			# reply+=recv_data
-		reply_sms = s.recv(8192) #8192Õâ¸ö»º³åÇøµÄ´óĞ¡Ö±½ÓÓ°Ïìµ½½ÓÊÕÊı¾İµÄÍêÕû³Ì¶È
+		reply_sms = s.recv(8192) #8192è¿™ä¸ªç¼“å†²åŒºçš„å¤§å°ç›´æ¥å½±å“åˆ°æ¥æ”¶æ•°æ®çš„å®Œæ•´ç¨‹åº¦
 		#print "out recv"
-		####################ÒÔÏÂ¶Ï¿ªÉ¨ÃèÁìÓÃ¼ÇÂ¼ºÍ¶ÌĞÅÍ¨Öª
+		####################ä»¥ä¸‹æ–­å¼€æ‰«æé¢†ç”¨è®°å½•å’ŒçŸ­ä¿¡é€šçŸ¥
 		s.close()
 		
-		# f=open("./pre.txt","a") #×·¼ÓĞ´Èë
-		# f.write(reply_sms.encode('utf-8')) #rec_strÊÇ×Ô´´µÄ×Ö·û´®£¬Ä¬ÈÏÎªascii±àÂë
-		# f.close()
-		####################ÒÔÏÂ´¦ÀíÊÕ¼¯µ½µÄÁìÓÃ¼ÇÂ¼Êı¾İ
-		str_num = reply.find('{')
-		reply_1 = reply[str_num:] #Ê×ÏÈÍê³É½«½ÓÊÕµ½µÄ´øHTTPÍ·µÄ·µ»ØÊı¾İµÄÇåÀí--È¥³ıHTTPÍ·		
 		
-		reply_2 = json.loads(reply_1) #½«·µ»ØÊı¾İ×ª»»Îªpython¶ÔÏó
+		__file__ = open(r'log.txt', 'a')
+		print >>__file__, reply.encode('utf-8')
+		print >>__file__, reply_sms.encode('utf-8')	
+		__file__.close()
+		# f=open("./pre.txt","a") #è¿½åŠ å†™å…¥
+		# f.write(reply_sms.encode('utf-8')) #rec_stræ˜¯è‡ªåˆ›çš„å­—ç¬¦ä¸²ï¼Œé»˜è®¤ä¸ºasciiç¼–ç 
+		# f.close()
+		####################ä»¥ä¸‹å¤„ç†æ”¶é›†åˆ°çš„é¢†ç”¨è®°å½•æ•°æ®
+		str_num = reply.find('{')
+		reply_1 = reply[str_num:] #é¦–å…ˆå®Œæˆå°†æ¥æ”¶åˆ°çš„å¸¦HTTPå¤´çš„è¿”å›æ•°æ®çš„æ¸…ç†--å»é™¤HTTPå¤´		
+		
+		reply_2 = json.loads(reply_1) #å°†è¿”å›æ•°æ®è½¬æ¢ä¸ºpythonå¯¹è±¡
 
-		rec_str = "" #ÓÃÓÚ´æ´¢ÁìÓÃ¼ÇÂ¼¡£Ã¿´ÎÉ¨Ãè¿ªÊ¼Ç°ĞèÒªÇå¿Õ¡£
-		num = reply_2["data"]["total_count"] #numÎª´Ë´ÎÉ¨Ãè·µ»ØµÄ¼ÇÂ¼ÊıÁ¿
+		rec_str = "" #ç”¨äºå­˜å‚¨é¢†ç”¨è®°å½•ã€‚æ¯æ¬¡æ‰«æå¼€å§‹å‰éœ€è¦æ¸…ç©ºã€‚
+		num = reply_2["data"]["total_count"] #numä¸ºæ­¤æ¬¡æ‰«æè¿”å›çš„è®°å½•æ•°é‡
 
-		#print reply_2["data"]["total_count"]#´Ë´¦Êä³öÎª·µ»ØµÄ¼ÇÂ¼Êı¾İÌõÊı£¬ÓÃÓÚºóĞøµÄÑ­»·Êä³ö
+		#print reply_2["data"]["total_count"]#æ­¤å¤„è¾“å‡ºä¸ºè¿”å›çš„è®°å½•æ•°æ®æ¡æ•°ï¼Œç”¨äºåç»­çš„å¾ªç¯è¾“å‡º
 		for rec_num in range(0,num):
 			rec_str = rec_str + reply_2["data"]["devices"][rec_num]["desc"] + "\r\n"
 			rec_id.append(reply_2["data"]["devices"][rec_num]["id"])			
 
-		f=open("./http_onenet_record_in_desc.txt","a") #×·¼ÓĞ´Èë
-		f.write(rec_str.encode('utf-8')) #rec_strÊÇ×Ô´´µÄ×Ö·û´®£¬Ä¬ÈÏÎªascii±àÂë
+		f=open("./http_onenet_record_in_desc.txt","a") #è¿½åŠ å†™å…¥
+		f.write(rec_str.encode('utf-8')) #rec_stræ˜¯è‡ªåˆ›çš„å­—ç¬¦ä¸²ï¼Œé»˜è®¤ä¸ºasciiç¼–ç 
 		f.close()
-		####################ÒÔÏÂ´¦ÀíÊÕ¼¯µ½µÄ¶ÌĞÅ¼ÇÂ¼Êı¾İ
+		####################ä»¥ä¸‹å¤„ç†æ”¶é›†åˆ°çš„çŸ­ä¿¡è®°å½•æ•°æ®
 		str_num = reply_sms.find('{')
-		reply_1 = reply_sms[str_num:] #Ê×ÏÈÍê³É½«½ÓÊÕµ½µÄ´øHTTPÍ·µÄ·µ»ØÊı¾İµÄÇåÀí--È¥³ıHTTPÍ·				
-		reply_2 = json.loads(reply_1) #½«·µ»ØÊı¾İ×ª»»Îªpython¶ÔÏó
+		reply_1 = reply_sms[str_num:] #é¦–å…ˆå®Œæˆå°†æ¥æ”¶åˆ°çš„å¸¦HTTPå¤´çš„è¿”å›æ•°æ®çš„æ¸…ç†--å»é™¤HTTPå¤´				
+		reply_2 = json.loads(reply_1) #å°†è¿”å›æ•°æ®è½¬æ¢ä¸ºpythonå¯¹è±¡
 
-		sms_str = "" #ÓÃÓÚ´æ´¢¶ÌĞÅ·¢ËÍÄ¿±ê,Ã¿Ìõ·¢ËÍÄ¿±êÊÇÒ»Ìõ×Ö·û´®£¬×÷ÎªÔªËØ´æÈëÁĞ±í
-		sms_num = reply_2["data"]["total_count"] #numÎª´Ë´ÎÉ¨Ãè·µ»ØµÄ¼ÇÂ¼ÊıÁ¿
+		sms_str = "" #ç”¨äºå­˜å‚¨çŸ­ä¿¡å‘é€ç›®æ ‡,æ¯æ¡å‘é€ç›®æ ‡æ˜¯ä¸€æ¡å­—ç¬¦ä¸²ï¼Œä½œä¸ºå…ƒç´ å­˜å…¥åˆ—è¡¨
+		sms_num = reply_2["data"]["total_count"] #numä¸ºæ­¤æ¬¡æ‰«æè¿”å›çš„è®°å½•æ•°é‡
 
-		#print reply_2["data"]["total_count"]#´Ë´¦Êä³öÎª·µ»ØµÄ¼ÇÂ¼Êı¾İÌõÊı£¬ÓÃÓÚºóĞøµÄÑ­»·Êä³ö
+		#print reply_2["data"]["total_count"]#æ­¤å¤„è¾“å‡ºä¸ºè¿”å›çš„è®°å½•æ•°æ®æ¡æ•°ï¼Œç”¨äºåç»­çš„å¾ªç¯è¾“å‡º
 		for rec_num in range(0,sms_num):
-			sms_str = sms_str + reply_2["data"]["devices"][rec_num]["desc"] + "\r\n"
+			sms_str = sms_str + reply_2["data"]["devices"][rec_num]["desc"] + "\r"
 			sms_id.append(reply_2["data"]["devices"][rec_num]["id"])			
-
-		f=open("./http_onenet_sms_in_desc.txt","a") #×·¼ÓĞ´Èë
-		f.write(sms_str.encode('utf-8')) #rec_strÊÇ×Ô´´µÄ×Ö·û´®£¬Ä¬ÈÏÎªascii±àÂë
+		#æ­¤å¤„å°†å¾…å‘é€çŸ­ä¿¡å†™å…¥æ–‡ä»¶
+		f=open("./http_onenet_sms_in_desc.txt","a") #è¿½åŠ å†™å…¥
+		f.write(sms_str.encode('utf-8')) #rec_stræ˜¯è‡ªåˆ›çš„å­—ç¬¦ä¸²ï¼Œé»˜è®¤ä¸ºasciiç¼–ç 
 		f.close()
 		
-		##########µÃµ½ËùĞè¼ÇÂ¼ºóÉ¾³ıOnenetÉÏµÄ´æ´¢##############
+		#æ­¤å¤„å‘é€çŸ­ä¿¡
+		if sms_num > 0 :
+			i_str = ''#è®°å½•æ¯æ¡çŸ­ä¿¡å‘é€éœ€æ±‚
+			sms_str_t=sms_str.split('\r')
+			for sms in range(0,sms_num):
+					i_str = sms_str_t[sms].split(',')
+					print i_str
+					param[YC.MOBILE] = i_str[0]
+					#print param[YC.MOBILE]
+					#print type(i_str[0])
+					#print type(param[YC.TEXT])
+					param[YC.TEXT] = 'ã€æ˜“è”ç‰©è”ç§‘æŠ€ã€‘æœºå™¨ç¼–å·ï¼š' + i_str[1].encode('utf-8') + ',è´§é“' + i_str[2].encode('utf-8') + 'ç¼ºè´§ï¼Œè¯·åŠæ—¶è¡¥å……'				
+					#print param[YC.TEXT]
+					
+					r = clnt.sms().single_send(param)
+					print r.code()
+					print r.msg()
+					print r.data()
+					print r.detail()
+					time.sleep(0.05) #ä¼‘æ¯50ms
 		
-		print "Õâ´Î²éµ½ÁË"+str(num)+"Ìõ¼ÇÂ¼,ÏÂÃæ¿ªÊ¼Öğ¸öÉ¾³ı¡£"
+		##########å¾—åˆ°æ‰€éœ€è®°å½•ååˆ é™¤Onenetä¸Šçš„å­˜å‚¨##############
+		
+		print u"è¿™æ¬¡æŸ¥åˆ°äº†"+str(num).encode('utf-8')+u"æ¡è®°å½•,ä¸‹é¢å¼€å§‹é€ä¸ªåˆ é™¤ã€‚"
+		__file__ = open(r'log.txt', 'a')
+		print >>__file__, "è¿™æ¬¡æŸ¥åˆ°äº†"+str(num)+"æ¡è®°å½•,ä¸‹é¢å¼€å§‹é€ä¸ªåˆ é™¤ã€‚"
+		__file__.close()
 		#print(num)
 		message_del_1 = "DELETE /devices/"
 		message_del_2 = " HTTP/1.1\r\nHost:api.heclouds.com\r\nAccept:*/*\r\napi-key:X6gNMI=4KPqDDLuHNLR40rS=9nY=\r\nContent-Length:0\r\n\r\n\r\n"
 
 
-		#×¢ÒâÉ¾³ı²Ù×÷Ê±·şÎñÆ÷»áÔÚÖ´ĞĞÍê±Ïºó×Ô¶¯¶Ï¿ªÁ¬½Ó£¬Òò´ËÃ¿Ö´ĞĞÒ»´ÎÉ¾³ı²Ù×÷£¬¶¼ĞèÒªÖØĞÂÁ¬½ÓÒ»´Î¡£Òò´Ë½«ĞÂ½¨Á¬½ÓµÄÄÚÈİ°üÀ¨ÔÚÑ­»·ÌåÄÚ¡£É¾³ı²Ù×÷ËùĞèÒªµÄ²ÎÊıÊÇ¼ÇÂ¼ID
+		#æ³¨æ„åˆ é™¤æ“ä½œæ—¶æœåŠ¡å™¨ä¼šåœ¨æ‰§è¡Œå®Œæ¯•åè‡ªåŠ¨æ–­å¼€è¿æ¥ï¼Œå› æ­¤æ¯æ‰§è¡Œä¸€æ¬¡åˆ é™¤æ“ä½œï¼Œéƒ½éœ€è¦é‡æ–°è¿æ¥ä¸€æ¬¡ã€‚å› æ­¤å°†æ–°å»ºè¿æ¥çš„å†…å®¹åŒ…æ‹¬åœ¨å¾ªç¯ä½“å†…ã€‚åˆ é™¤æ“ä½œæ‰€éœ€è¦çš„å‚æ•°æ˜¯è®°å½•ID
 		try:
 			#create an AF_INET, STREAM socket(TCP)
 			s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -165,9 +199,12 @@ while True:
 						#Send Failed
 						print  'Send Failed'
 						sys.exit()
-				print "É¾³ıµÚ"+str(x+1)+"Ìõ¼ÇÂ¼!"
-				time.sleep(0.05) #ĞİÏ¢50ms
-		print "Õâ´Î²éµ½ÁË"+str(sms_num)+"Ìõ¶ÌĞÅ,ÏÂÃæ¿ªÊ¼Öğ¸öÉ¾³ı¡£"		
+				print u"åˆ é™¤ç¬¬"+str(x+1).encode('utf-8')+u"æ¡è®°å½•!"
+				time.sleep(0.05) #ä¼‘æ¯50ms
+		print u"è¿™æ¬¡æŸ¥åˆ°äº†"+str(sms_num).encode('utf-8')+u"æ¡çŸ­ä¿¡,ä¸‹é¢å¼€å§‹é€ä¸ªåˆ é™¤ã€‚"
+		__file__ = open(r'log.txt', 'a')
+		print >>__file__, "è¿™æ¬¡æŸ¥åˆ°äº†"+str(sms_num)+"æ¡çŸ­ä¿¡,ä¸‹é¢å¼€å§‹é€ä¸ªåˆ é™¤ã€‚"
+		__file__.close()
 		for x in range(0,sms_num):
 				
 				try:
@@ -179,8 +216,8 @@ while True:
 						#Send Failed
 						print  'Send Failed'
 						sys.exit()
-				print "É¾³ıµÚ"+str(x+1)+"Ìõ¶ÌĞÅ!"
-				time.sleep(0.05) #ĞİÏ¢50ms
-		s.close() #¿ÉÒÔÔÚÁ¬½Ó×´Ì¬ÏÂ£¬¼äĞªµØ·¢ËÍ¶àÌõÊı¾İÉ¾³ıÖ¸Áî£¬×îºóÔÙ¹Ø±Õ¡£
+				print u"åˆ é™¤ç¬¬"+str(x+1).encode('utf-8')+u"æ¡çŸ­ä¿¡!"
+				time.sleep(0.05) #ä¼‘æ¯50ms
+		s.close() #å¯ä»¥åœ¨è¿æ¥çŠ¶æ€ä¸‹ï¼Œé—´æ­‡åœ°å‘é€å¤šæ¡æ•°æ®åˆ é™¤æŒ‡ä»¤ï¼Œæœ€åå†å…³é—­ã€‚
 		
-		time.sleep(5) #ĞİÏ¢15ÃëÖÓ
+		time.sleep(5) #ä¼‘æ¯15ç§’é’Ÿ
